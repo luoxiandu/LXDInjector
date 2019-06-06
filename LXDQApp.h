@@ -1,5 +1,6 @@
 #pragma once
 #include <QApplication>
+#include "ThemidaSDK.h"
 class LXDQApp :
 	public QApplication
 {

@@ -6,6 +6,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QTimer>
+#include "LXDQApp.h"
 
 class DLLRenamer : public QObject
 {

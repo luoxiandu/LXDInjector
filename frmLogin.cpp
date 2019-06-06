@@ -53,14 +53,24 @@ void frmLogin::login()
 
 void frmLogin::triallogin()
 {
+	VM_START
+		int CheckVar1;
 	/// 获取用户输入的用户名和密码信息
 	QString username, password;
 	username = ui.lnUsername->text();
 	password = ui.lnPassword->text();
 
+	CHECK_CODE_INTEGRITY(CheckVar1, 0x6668A5F9)
 	/// 获取机器码
 	HW_PROFILE_INFO hwProfInfo;
 	GetCurrentHwProfile(&hwProfInfo);
+	/// 暗桩
+	if (CheckVar1 != 0x6668A5F9)
+	{
+		STR_ENCRYPT_START
+		((LXDQApp *)qApp)->ver = "cracked";
+		STR_ENCRYPT_END
+	}
 
 	/// 构造HTTP请求
 	QByteArray reqdata;
@@ -76,10 +86,12 @@ void frmLogin::triallogin()
 	ui.btnJoinus->setDisabled(true);
 
 	this->isBeggar = true;
+	VM_END
 }
 
 void frmLogin::on_login_recieved(QNetworkReply *rep)
 {
+	VM_START
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
 	QString respstr = rep->readAll();
 	rep->deleteLater();
@@ -126,18 +138,22 @@ void frmLogin::on_login_recieved(QNetworkReply *rep)
 	{
 		if (this->isBeggar)
 		{
+			STR_ENCRYPTW_START
 			QString msg = QString::fromWCharArray(L"<p>服务器拒绝了您的试用请求，可能是您今天已经试用过了，欢迎您明天再来！</p>");
 			msg += QString::fromWCharArray(L"<p>也可能是您的版本过期了，请&nbsp;<a style=\"color: #BBBBBB\" href=\"https://luoxiandu.com\">访问我们的官网</a>&nbsp;获取最新版本！</p>");
 			msg += QString::fromWCharArray(L"<p>如果您有其它问题，欢迎&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=c9f0a58ddf654dfee69356d744d426607f5f2ed076c09c1be78e5af2a4f893a8\">加入洛仙都QQ群（105976356）</a>&nbsp;来和我们讨论。</p>");
 			QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), msg);
+			STR_ENCRYPTW_END
 			message.setWindowIcon(ico);
 			message.exec();
 		}
 		else
 		{
+			STR_ENCRYPTW_START
 			QString msg = QString::fromWCharArray(L"<p>登录失败，请检查QQ号和密码是否有误，或者版本是否为最新！</p>");
 			msg += QString::fromWCharArray(L"<p>如果您怀疑您的版本过期了，请&nbsp;<a style=\"color: #BBBBBB\" href=\"https://luoxiandu.com\">访问我们的官网</a>&nbsp;获取最新版本。</p>");
 			QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), msg);
+			STR_ENCRYPTW_END
 			message.setWindowIcon(ico);
 			message.exec();
 		}
@@ -145,6 +161,7 @@ void frmLogin::on_login_recieved(QNetworkReply *rep)
 		ui.btnJoinus->setDisabled(false);
 		return;
 	}
+	VM_END
 }
 
 void frmLogin::exit()
@@ -154,11 +171,15 @@ void frmLogin::exit()
 
 void frmLogin::joinus()
 {
+	VM_START
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
+	STR_ENCRYPTW_START
 	QString msg = QString::fromWCharArray(L"<p>注册用户登录会获得更多功能哦！</p><p>如需注册，请&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=c9f0a58ddf654dfee69356d744d426607f5f2ed076c09c1be78e5af2a4f893a8\">加入洛仙都QQ群（105976356）</a>&nbsp;，并向机器人发送“设置密码”来设置您的密码。</p>");
 	QMessageBox message(QMessageBox::Information, QString::fromWCharArray(L"信息"), msg);
+	STR_ENCRYPTW_END
 	message.setWindowIcon(ico);
 	message.exec();
+	VM_END
 }
 
 void frmLogin::on_btnJoinus_clicked()

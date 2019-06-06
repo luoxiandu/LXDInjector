@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	LXDQApp a(argc, argv);
 	frmLogin login;
 	qApp->setStyleSheet(theme.readAll());
-	DeclareDumpFile()
+	// DeclareDumpFile()
 	if (login.exec() == QDialog::Accepted)
 	{
 		LXDInjector w;

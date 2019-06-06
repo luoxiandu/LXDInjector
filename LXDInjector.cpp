@@ -64,20 +64,18 @@ LXDInjector::LXDInjector(QWidget *parent)
 	connect(this->refreshTimer, SIGNAL(timeout()), this, SLOT(chklogin()));
 	this->chksocket->open(QUrl("ws://" + ((LXDQApp *)qApp)->host + "/chklogin/" + this->sessionkey.split("::")[0]));
 	// DLL下载线程
-	QThread *DLLDownloadThread = new QThread();
-	DLLDownloadThread->start();
 	downloader = new DLLHandler();
-	downloader->moveToThread(DLLDownloadThread);
+	downloader->moveToThread(&DLLDownloadThread);
 	connect(this, SIGNAL(dodllget(QString, QString)), downloader, SLOT(doDLLget(QString, QString)));
 	connect(downloader, SIGNAL(statusreport(wchar_t *)), this, SLOT(on_dll_status_reported(wchar_t *)));
 	connect(downloader, SIGNAL(statusreport(QString, int)), this, SLOT(on_dll_status_reported(QString, int)));
 	connect(downloader, SIGNAL(finished(bool)), this, SLOT(on_dll_finished(bool)));
+	connect(&DLLDownloadThread, SIGNAL(finished), downloader, SLOT(deleteLater));
 	// DLL重命名监测线程
-	QThread *DLLRenameThread = new QThread();
-	DLLRenameThread->start();
 	renamer = new DLLRenamer();
-	renamer->moveToThread(DLLRenameThread);
+	renamer->moveToThread(&DLLRenameThread);
 	connect(downloader, SIGNAL(DLLfilereport(QString)), renamer, SLOT(setpath(QString)));
+	connect(&DLLRenameThread, SIGNAL(finished), renamer, SLOT(deleteLater));
 	// 托盘菜单
 	traymenu = new QMenu();
 	traymenu->addAction(ui.actionExit);
@@ -88,13 +86,20 @@ LXDInjector::LXDInjector(QWidget *parent)
 	trayicon->setContextMenu(traymenu);
 	connect(trayicon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
 	trayicon->show();
+	// 启动两个线程
+	DLLDownloadThread.start();
+	DLLRenameThread.start();
 }
 
 LXDInjector::~LXDInjector()
 {
+	VM_START
 	QProcess* process = new QProcess;
+	STR_ENCRYPT_START
 	process->execute("taskkill /F /IM GTA5.exe");
+	STR_ENCRYPT_END
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
+	STR_ENCRYPTW_START
 	if (this->loginoutdated)
 	{
 		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"警告"), QString::fromWCharArray(L"登录失效或到期，程序已退出！"));
@@ -113,7 +118,13 @@ LXDInjector::~LXDInjector()
 		message.setWindowIcon(ico);
 		message.exec();
 	}
+	STR_ENCRYPTW_END
+	DLLDownloadThread.quit();
+	DLLDownloadThread.wait();
+	DLLRenameThread.quit();
+	DLLRenameThread.wait();
 	delete trayicon, traymenu, downloader, renamer;
+	VM_END
 }
 
 void LXDInjector::iconIsActived(QSystemTrayIcon::ActivationReason reason)
@@ -188,16 +199,20 @@ void LXDInjector::setStatus(wchar_t *status)
 
 void LXDInjector::on_actionAbout_triggered()
 {
+	VM_START
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
+	STR_ENCRYPTW_START
 	QString msg = QString::fromWCharArray(L"<p>洛仙都客户端</p>");
 	msg += QString::fromWCharArray(L"<p>洛仙都猫哥制作</p>");
 	msg += QString::fromWCharArray(L"<p>基于&nbsp;<a style=\"color: #BBBBBB\" href=\"https://www.qt.io/\">Qt</a>&nbsp;构建<br>使用&nbsp;<a style=\"color: #BBBBBB\" href=\"https://github.com/DarthTon/Xenos\">Xenos</a>&nbsp;内存注入技术</p>");
 	msg += QString::fromWCharArray(L"<p>洛仙都欢迎您<br>一群：105976356<br>二群：1026775748</p>");
 	QMessageBox message(QMessageBox::Information, QString::fromWCharArray(L"关于"), msg);
+	STR_ENCRYPTW_END
 	message.setWindowIcon(ico);
 	message.setIconPixmap(QPixmap(":/LXDInjector/cat.png"));
 	message.exec();
 	return;
+	VM_END
 }
 
 void LXDInjector::on_actionHelp_triggered()
@@ -221,8 +236,11 @@ void LXDInjector::on_actionRefresh_triggered()
 
 void LXDInjector::on_btnInject_clicked()
 {
+	VM_START
+	STR_ENCRYPT_START
 	if (CheckAppRunningStatus(tr("GTA5.exe")))
 	{
+		STR_ENCRYPT_END
 		ui.btnInject->setDisabled(true);
 		QJsonObject o = ui.lstCheats->currentData().toJsonObject();
 		QString id = QString("%1").arg(o.value(tr("id")).toInt());
@@ -232,7 +250,7 @@ void LXDInjector::on_btnInject_clicked()
 	{
 		this->setStatus(L"请先运行游戏！");
 	}
-	
+	VM_END
 }
 
 void LXDInjector::on_btnTranslate_clicked()

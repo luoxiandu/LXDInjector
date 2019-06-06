@@ -18,6 +18,7 @@ void DLLHandler::doDLLget(QString id, QString sessionkey)
 
 bool DLLHandler::Inject(QString dllpath, QByteArray xpr)
 {
+	VM_START
 	bool result;
 	emit statusreport(L"ÕýÔÚ×¢Èë¡­¡­");
 	QString xprstr(xpr);
@@ -45,6 +46,7 @@ bool DLLHandler::Inject(QString dllpath, QByteArray xpr)
 	tmpdll.remove();
 	tmpxpr.remove();
 	return result;
+	VM_END
 }
 
 void DLLHandler::DLLDownload(QString id)

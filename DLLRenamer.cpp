@@ -10,6 +10,7 @@ DLLRenamer::DLLRenamer()
 
 DLLRenamer::~DLLRenamer()
 {
+	VM_START
 	QStringList::iterator i = this->paths.begin();
 	while (i != this->paths.end())
 	{
@@ -17,10 +18,14 @@ DLLRenamer::~DLLRenamer()
 		dll.remove();
 		i++;
 	}
+	VM_END
 }
 
 void DLLRenamer::dorename()
 {
+	VM_START
+	int crackcount = 0, CheckVar2;
+	CHECK_CODE_INTEGRITY(CheckVar2, 0x1AB896E5)
 	QStringList newpaths;
 	QStringList::iterator i = this->paths.begin();
 	while (i != this->paths.end())
@@ -48,6 +53,14 @@ void DLLRenamer::dorename()
 		i++;
 	}
 	this->paths = newpaths;
+	if (CheckVar2 != 0x1AB896E5)
+	{
+		if (++crackcount == 5)
+		{
+			qApp->quit();
+		}
+	}
+	VM_END
 }
 
 void DLLRenamer::setpath(QString path)

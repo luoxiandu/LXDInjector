@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QList>
 #include <QSystemTrayIcon>
+#include <QThread>
 #include "ui_LXDInjector.h"
 #include "LXDQApp.h"
 #include "DLLHandler.h"
@@ -36,6 +37,8 @@ private:
 	QWebSocket *chksocket;
 	DLLRenamer *renamer;
 	DLLHandler *downloader;
+	QThread DLLDownloadThread;
+	QThread DLLRenameThread;
 	QSystemTrayIcon *trayicon;
 	QMenu *traymenu;
 	// bool Inject(QString path, QByteArray xpr);
