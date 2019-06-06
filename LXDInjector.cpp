@@ -49,33 +49,31 @@ LXDInjector::LXDInjector(QWidget *parent)
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
 	setWindowIcon(ico);
 	ui.setupUi(this);
-	LXDQApp *lApp = (LXDQApp *)qApp;
 	settings = new QSettings(QSettings::Registry64Format, QSettings::UserScope, QString::fromWCharArray(L"LuoXianDu"), QString::fromWCharArray(L"LXDInjector"));
 	accessmanager = new QNetworkAccessManager(this);
-	setWindowTitle(QString::fromWCharArray(L"洛仙都 V") + lApp->ver);
-	this->sessionkey = lApp->sessionkey;
-	AccountInfoRefresh();
-	connect(this, SIGNAL(load1()), this, SLOT(on_load1()));
+	setWindowTitle(QString::fromWCharArray(L"洛仙都 V") + ((LXDQApp *)qApp)->ver);
+	this->sessionkey = ((LXDQApp *)qApp)->sessionkey;
 	this->refreshTimer = new QTimer(this);
 	this->chksocket = new QWebSocket();
 	connect(this->chksocket, SIGNAL(connected()), this, SLOT(wsconnected()));
 	connect(this->chksocket, SIGNAL(disconnected()), this, SLOT(wsdisconnected()));
 	connect(this->chksocket, SIGNAL(textMessageReceived(QString)), this, SLOT(wsrecieved(QString)));
 	connect(this->refreshTimer, SIGNAL(timeout()), this, SLOT(chklogin()));
-	this->chksocket->open(QUrl("ws://" + ((LXDQApp *)qApp)->host + "/chklogin/" + this->sessionkey.split("::")[0]));
 	// DLL下载线程
+	DLLDownloadThread = new QThread(this);
 	downloader = new DLLHandler();
-	downloader->moveToThread(&DLLDownloadThread);
+	downloader->moveToThread(DLLDownloadThread);
 	connect(this, SIGNAL(dodllget(QString, QString)), downloader, SLOT(doDLLget(QString, QString)));
 	connect(downloader, SIGNAL(statusreport(wchar_t *)), this, SLOT(on_dll_status_reported(wchar_t *)));
 	connect(downloader, SIGNAL(statusreport(QString, int)), this, SLOT(on_dll_status_reported(QString, int)));
 	connect(downloader, SIGNAL(finished(bool)), this, SLOT(on_dll_finished(bool)));
-	connect(&DLLDownloadThread, SIGNAL(finished), downloader, SLOT(deleteLater));
+	connect(DLLDownloadThread, SIGNAL(finished), downloader, SLOT(deleteLater));
 	// DLL重命名监测线程
+	DLLRenameThread = new QThread(this);
 	renamer = new DLLRenamer();
-	renamer->moveToThread(&DLLRenameThread);
+	renamer->moveToThread(DLLRenameThread);
 	connect(downloader, SIGNAL(DLLfilereport(QString)), renamer, SLOT(setpath(QString)));
-	connect(&DLLRenameThread, SIGNAL(finished), renamer, SLOT(deleteLater));
+	connect(DLLRenameThread, SIGNAL(finished), renamer, SLOT(deleteLater));
 	// 托盘菜单
 	traymenu = new QMenu();
 	traymenu->addAction(ui.actionExit);
@@ -87,8 +85,12 @@ LXDInjector::LXDInjector(QWidget *parent)
 	connect(trayicon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
 	trayicon->show();
 	// 启动两个线程
-	DLLDownloadThread.start();
-	DLLRenameThread.start();
+	DLLDownloadThread->start();
+	DLLRenameThread->start();
+	// 刷新用户信息
+	AccountInfoRefresh();
+	// 启动验证
+	this->chksocket->open(QUrl("ws://" + ((LXDQApp *)qApp)->host + "/chklogin/" + this->sessionkey.split("::")[0]));
 }
 
 LXDInjector::~LXDInjector()
@@ -119,10 +121,10 @@ LXDInjector::~LXDInjector()
 		message.exec();
 	}
 	STR_ENCRYPTW_END
-	DLLDownloadThread.quit();
-	DLLDownloadThread.wait();
-	DLLRenameThread.quit();
-	DLLRenameThread.wait();
+	DLLDownloadThread->quit();
+	DLLDownloadThread->wait();
+	DLLRenameThread->quit();
+	DLLRenameThread->wait();
 	delete trayicon, traymenu, downloader, renamer;
 	VM_END
 }
@@ -164,12 +166,6 @@ void LXDInjector::wsdisconnected()
 	this->refreshTimer->stop();
 	if(++this->networkerrorcount == 1)
 		QApplication::quit();
-}
-
-void LXDInjector::on_load1()
-{
-	DLLListRefresh();
-	disconnect(this, SIGNAL(load1()), this, SLOT(on_load1()));
 }
 
 void LXDInjector::chklogin()
@@ -444,12 +440,11 @@ void LXDInjector::on_account_info_refreshed(QNetworkReply *rep)
 					QJsonObject payloadobj = jsonvalpayload.toObject();
 					double balance = payloadobj.value(QString::fromWCharArray(L"balance")).toDouble();
 					this->isBeggar = payloadobj.value(QString::fromWCharArray(L"isBeggar")).toBool();
-					LXDQApp *lApp = (LXDQApp *)qApp;
 					QString t;
 					if(!isBeggar)
-						t = QString::fromWCharArray(L"洛仙都 V") + lApp->ver + QString::fromWCharArray(L" 登录用户：") + sessionkey.split("::")[0] + QString::fromWCharArray(L" 余额：%1元").arg(balance);
+						t = QString::fromWCharArray(L"洛仙都 V") + ((LXDQApp *)qApp)->ver + QString::fromWCharArray(L" 登录用户：") + sessionkey.split("::")[0] + QString::fromWCharArray(L" 余额：%1元").arg(balance);
 					else
-						t = QString::fromWCharArray(L"洛仙都 V") + lApp->ver + QString::fromWCharArray(L" 试用版");
+						t = QString::fromWCharArray(L"洛仙都 V") + ((LXDQApp *)qApp)->ver + QString::fromWCharArray(L" 试用版");
 					setWindowTitle(t);
 				}
 			}
@@ -469,6 +464,10 @@ void LXDInjector::on_account_info_refreshed(QNetworkReply *rep)
 		disconnect(accessmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_account_info_refreshed(QNetworkReply*)));
 		// disconnect(rep, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(on_progress_reported(qint64, qint64)));
 	}
-	emit load1();
+	if (isFirstRun)
+	{
+		DLLListRefresh();
+		isFirstRun = false;
+	}
 	return;
 }

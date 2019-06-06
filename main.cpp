@@ -7,6 +7,7 @@
 
 int main(int argc, char *argv[])
 {
+	VM_START
 	QFile theme("Theme/Darcula/darcula.qss");
 	theme.open(QIODevice::ReadOnly);
 	LXDQApp a(argc, argv);
@@ -22,4 +23,5 @@ int main(int argc, char *argv[])
 	}
 	else
 		return 0;
+	VM_END
 }

@@ -28,6 +28,7 @@ private:
 	int developercount = 0;
 	bool isBeggar = true;
 	bool loginoutdated = false;
+	bool isFirstRun = true;
 	int networkerrorcount = 0;
 	Ui::LXDInjectorClass ui;
 	QNetworkAccessManager *accessmanager;
@@ -37,8 +38,8 @@ private:
 	QWebSocket *chksocket;
 	DLLRenamer *renamer;
 	DLLHandler *downloader;
-	QThread DLLDownloadThread;
-	QThread DLLRenameThread;
+	QThread *DLLDownloadThread;
+	QThread *DLLRenameThread;
 	QSystemTrayIcon *trayicon;
 	QMenu *traymenu;
 	// bool Inject(QString path, QByteArray xpr);
@@ -52,7 +53,6 @@ private slots:
 	void wsconnected();
 	void wsdisconnected();
 	void wsrecieved(QString);
-	void on_load1();
 	void on_btnInject_clicked();
 	void on_btnTranslate_clicked();
 	void on_actionExit_triggered();
@@ -73,6 +73,5 @@ public slots:
 	void on_dll_status_reported(QString status, int ms);
 
 signals:
-	void load1();
 	void dodllget(QString id, QString sessionkey);
 };
