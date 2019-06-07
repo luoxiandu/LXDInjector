@@ -14,6 +14,7 @@
 #include "LXDQApp.h"
 #include "DLLHandler.h"
 #include "DLLRenamer.h"
+#include "RockstarStatus.h"
 
 class LXDInjector : public QMainWindow
 {
@@ -40,6 +41,8 @@ private:
 	DLLHandler *downloader;
 	QThread *DLLDownloadThread;
 	QThread *DLLRenameThread;
+	QThread *RockstarStatusThread;
+	RockstarStatus *RockstarStatusworker;
 	QSystemTrayIcon *trayicon;
 	QMenu *traymenu;
 	// bool Inject(QString path, QByteArray xpr);
@@ -59,8 +62,9 @@ private slots:
 	void on_actionAbout_triggered();
 	void on_actionRefresh_triggered();
 	void on_actionHelp_triggered();
+	void on_actiongetRockstarStatus_triggered();
+	void on_actionRefreshAccount_triggered();
 	void on_lstCheats_currentIndexChanged(int);
-	// void on_dll_downloaded(QNetworkReply *rep);
 	void on_progress_reported(qint64, qint64);
 	void on_dll_list_refreshed(QNetworkReply *rep);
 	void on_account_info_refreshed(QNetworkReply *rep);
@@ -71,7 +75,10 @@ public slots:
 	void on_dll_finished(bool);
 	void on_dll_status_reported(wchar_t *status);
 	void on_dll_status_reported(QString status, int ms);
+	void on_RockstarStatus_got(QString result);
+	void showError(QString errstr);
 
 signals:
 	void dodllget(QString id, QString sessionkey);
+	void doRockstarStatusget();
 };

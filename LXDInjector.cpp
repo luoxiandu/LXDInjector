@@ -46,6 +46,7 @@ QString getRandomString(int length, bool use_symbols)
 LXDInjector::LXDInjector(QWidget *parent)
 	: QMainWindow(parent)
 {
+	this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
 	setWindowIcon(ico);
 	ui.setupUi(this);
@@ -104,7 +105,7 @@ LXDInjector::~LXDInjector()
 	STR_ENCRYPTW_START
 	if (this->loginoutdated)
 	{
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"警告"), QString::fromWCharArray(L"登录失效或到期，程序已退出！"));
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"警告"), QString::fromWCharArray(L"登录失效或到期，程序已退出！\n若您是登录用户，请确认您的账号没有同时多开多个客户端。"));
 		message.setWindowIcon(ico);
 		message.exec();
 	}
@@ -127,6 +128,14 @@ LXDInjector::~LXDInjector()
 	DLLRenameThread->wait();
 	delete trayicon, traymenu, downloader, renamer;
 	VM_END
+}
+
+void LXDInjector::showError(QString errstr)
+{
+	QIcon ico(":/LXDInjector/LXDInjector.ico");
+	QMessageBox message(QMessageBox::Warning, QString::fromWCharArray(L"错误"), errstr);
+	message.setWindowIcon(ico);
+	message.exec();
 }
 
 void LXDInjector::iconIsActived(QSystemTrayIcon::ActivationReason reason)
@@ -228,6 +237,40 @@ void LXDInjector::on_actionExit_triggered()
 void LXDInjector::on_actionRefresh_triggered()
 {
 	DLLListRefresh();
+}
+
+void LXDInjector::on_actionRefreshAccount_triggered()
+{
+	AccountInfoRefresh();
+}
+
+void LXDInjector::on_actiongetRockstarStatus_triggered()
+{
+	RockstarStatusThread = new QThread(this);
+	RockstarStatusworker = new RockstarStatus();
+	RockstarStatusworker->moveToThread(RockstarStatusThread);
+	connect(RockstarStatusworker, SIGNAL(finishget(QString)), this, SLOT(on_RockstarStatus_got(QString)));
+	connect(this, SIGNAL(doRockstarStatusget()), RockstarStatusworker, SLOT(doget()));
+	connect(RockstarStatusworker, SIGNAL(reporterr(QString)), this, SLOT(showError(QString)));
+	connect(RockstarStatusThread, SIGNAL(finished), RockstarStatusworker, SLOT(deleteLater));
+	RockstarStatusThread->start();
+	this->setStatus(L"正在查询……");
+	emit doRockstarStatusget();
+}
+
+void LXDInjector::on_RockstarStatus_got(QString result)
+{
+	disconnect(RockstarStatusworker, SIGNAL(finishget(QString)), this, SLOT(on_RockstarStatus_got(QString)));
+	disconnect(this, SIGNAL(doRockstarStatusget()), RockstarStatusworker, SLOT(doget()));
+	disconnect(RockstarStatusworker, SIGNAL(reporterr(QString)), this, SLOT(showError(QString)));
+	delete RockstarStatusworker;
+	RockstarStatusThread->quit();
+	RockstarStatusThread->wait();
+	delete RockstarStatusThread;
+	QIcon ico(":/LXDInjector/LXDInjector.ico");
+	QMessageBox message(QMessageBox::Information, QString::fromWCharArray(L"Rockstar服务器状态"), result);
+	message.setWindowIcon(ico);
+	message.exec();
 }
 
 void LXDInjector::on_btnInject_clicked()
@@ -446,6 +489,7 @@ void LXDInjector::on_account_info_refreshed(QNetworkReply *rep)
 					else
 						t = QString::fromWCharArray(L"洛仙都 V") + ((LXDQApp *)qApp)->ver + QString::fromWCharArray(L" 试用版");
 					setWindowTitle(t);
+					this->setStatus(L"账户信息已刷新！");
 				}
 			}
 			else
