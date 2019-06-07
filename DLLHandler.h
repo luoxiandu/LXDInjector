@@ -25,6 +25,8 @@ public:
 	~DLLHandler();
 
 private:
+	QTime downloadclock;
+	qint64 lastrec;
 	QString sessionkey;
 	QNetworkAccessManager *accessmanager;
 	bool Inject(QString path, QByteArray xpr);

@@ -63,6 +63,8 @@ void DLLHandler::DLLDownload(QString id)
 	{
 		connect(rep, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(on_progress_reported(qint64, qint64)));
 		connect(accessmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_dll_downloaded(QNetworkReply*)));
+		downloadclock = QTime::currentTime();
+		lastrec = 0;
 	}
 	else
 	{
@@ -73,7 +75,8 @@ void DLLHandler::DLLDownload(QString id)
 
 void DLLHandler::on_dll_downloaded(QNetworkReply *rep)
 {
-	bool injectcompleted;
+	VM_START
+	bool injectcompleted = false;
 	if (rep->url().path() == QString::fromWCharArray(L"/getdll"))
 	{
 		QString respstr = rep->readAll();
@@ -193,10 +196,13 @@ void DLLHandler::on_dll_downloaded(QNetworkReply *rep)
 	}
 	emit finished(injectcompleted);
 	return;
+	VM_END
 }
 
 void DLLHandler::on_progress_reported(qint64 rec, qint64 tot)
 {
+	int intervaltime = downloadclock.msecsTo(QTime::currentTime());
+	int intervalrec = rec - lastrec;
 	QString status;
 	status.append(QString::fromWCharArray(L"接收进度:"));
 	if (rec >= 1048576)
@@ -212,5 +218,15 @@ void DLLHandler::on_progress_reported(qint64 rec, qint64 tot)
 		status.append(tr("%1KB").arg(tot / 1024.0));
 	else
 		status.append(tr("%1Bytes").arg(tot));
+	qreal bytespersecond = ((intervalrec * 1000.0) / (qreal)intervaltime);
+	status.append(QString::fromWCharArray(L"   下载速度："));
+	if (bytespersecond >= 1048576)
+		status.append(tr("%1MB/s").arg(bytespersecond / 1048576.0));
+	else if (bytespersecond < 1048576 && bytespersecond > 1024)
+		status.append(tr("%1KB/s").arg(bytespersecond / 1024.0));
+	else
+		status.append(tr("%1B/s").arg(bytespersecond));
 	emit statusreport(status, 1000);
+	downloadclock = QTime::currentTime();
+	lastrec = rec;
 }
