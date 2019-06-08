@@ -3,6 +3,7 @@
 
 bool CheckAppRunningStatus(const QString &appName)
 {
+	VM_START
 #ifdef Q_OS_WIN
 	QProcess* process = new QProcess;
 	process->start("tasklist", QStringList() << "/FI" << "imagename eq " + appName);
@@ -15,6 +16,7 @@ bool CheckAppRunningStatus(const QString &appName)
 		return false;
 	}
 #endif
+	VM_END
 }
 
 QString getRandomString(int length, bool use_symbols)
@@ -273,6 +275,20 @@ void LXDInjector::on_actionRefresh_triggered()
 void LXDInjector::on_actionRefreshAccount_triggered()
 {
 	AccountInfoRefresh();
+}
+
+void LXDInjector::on_actionDeposit_triggered()
+{
+	if (!isBeggar)
+	{
+		Deposit w;
+		w.exec();
+		AccountInfoRefresh();
+	}
+	else
+	{
+		this->setStatus(L"本服务完全免费，无需充值。");
+	}
 }
 
 void LXDInjector::on_actiongetRockstarStatus_triggered()

@@ -2,10 +2,11 @@
 #include <QProcess>
 #include <QThread>
 #include <QLocalServer>
+#include <ThemidaSDK.h>
 
 bool CheckAppRunningStatus(const QString &appName)
 {
-#ifdef Q_OS_WIN
+	VM_START
 	QProcess* process = new QProcess;
 	process->start("tasklist", QStringList() << "/FI" << "imagename eq " + appName);
 	process->waitForFinished();
@@ -16,11 +17,13 @@ bool CheckAppRunningStatus(const QString &appName)
 	else {
 		return false;
 	}
-#endif
+	VM_END
 }
 
 int guard()
 {
+	VM_START
+	STR_ENCRYPT_START
 	while (true)
 	{
 		if (!CheckAppRunningStatus(QString("LXDInjector.exe")))
@@ -30,18 +33,21 @@ int guard()
 			exit(0);
 		}
 	}
+	STR_ENCRYPT_END
+	VM_END
 }
 
 int main(int argc, char *argv[])
 {
+	VM_START
+	STR_ENCRYPT_START
 	QCoreApplication a(argc, argv);
 	QLocalServer svr(&a);
 	svr.listen("LXDGuardPipe");
-	printf("%d\n", svr.isListening());
-	printf(svr.fullServerName().toLocal8Bit());
-	printf("\n");
 	QThread *chk = QThread::create(guard);
 	chk->start();
 	a.exec();
 	return 0;
+	STR_ENCRYPT_END
+	VM_END
 }

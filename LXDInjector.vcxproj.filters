@@ -68,6 +68,9 @@
     <ClCompile Include="RockstarStatus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deposit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -113,9 +116,15 @@
     <QtMoc Include="RockstarStatus.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Deposit.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="frmLogin.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="Deposit.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

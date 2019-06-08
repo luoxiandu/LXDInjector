@@ -141,6 +141,7 @@
     <property name="title">
      <string>服务</string>
     </property>
+    <addaction name="actionDeposit"/>
     <addaction name="actionRefreshAccount"/>
     <addaction name="actionRefresh"/>
     <addaction name="actiongetRockstarStatus"/>
@@ -200,6 +201,11 @@
   <action name="actionRefreshAccount">
    <property name="text">
     <string>刷新账户信息</string>
+   </property>
+  </action>
+  <action name="actionDeposit">
+   <property name="text">
+    <string>充值</string>
    </property>
   </action>
  </widget>
