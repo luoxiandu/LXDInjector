@@ -85,6 +85,25 @@ LXDInjector::LXDInjector(QWidget *parent)
 	trayicon->setContextMenu(traymenu);
 	connect(trayicon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
 	trayicon->show();
+	// 启动守护进程
+	if (!QProcess::startDetached("LXDGuard.exe"))
+	{
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败，程序自动退出！"));
+		message.setWindowIcon(ico);
+		message.exec();
+		exit(0);
+	}
+	// 连接守护进程
+	while (!CheckAppRunningStatus("LXDGuard.exe"));
+	GuardSocket.connectToServer("LXDGuardPipe");
+	if (!GuardSocket.waitForConnected(-1))
+	{
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败，程序自动退出！"));
+		message.setWindowIcon(ico);
+		message.exec();
+		exit(0);
+	}
+	connect(&GuardSocket, SIGNAL(disconnected()), this, SLOT(on_guard_died()));
 	// 启动两个线程
 	DLLDownloadThread->start();
 	DLLRenameThread->start();
@@ -127,6 +146,18 @@ LXDInjector::~LXDInjector()
 	DLLRenameThread->quit();
 	DLLRenameThread->wait();
 	delete trayicon, traymenu, downloader, renamer;
+	VM_END
+}
+
+void LXDInjector::on_guard_died()
+{
+	VM_START
+	STR_ENCRYPT_START
+	QProcess* process = new QProcess;
+	process->execute("taskkill /F /IM GTA5.exe");
+	disconnect(&GuardSocket, SIGNAL(disconnected()), this, SLOT(on_guard_died()));
+	qApp->quit();
+	STR_ENCRYPT_END
 	VM_END
 }
 

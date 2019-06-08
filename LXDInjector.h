@@ -10,6 +10,7 @@
 #include <QList>
 #include <QSystemTrayIcon>
 #include <QThread>
+#include <QLocalSocket>
 #include "ui_LXDInjector.h"
 #include "LXDQApp.h"
 #include "DLLHandler.h"
@@ -45,6 +46,7 @@ private:
 	RockstarStatus *RockstarStatusworker;
 	QSystemTrayIcon *trayicon;
 	QMenu *traymenu;
+	QLocalSocket GuardSocket;
 	// bool Inject(QString path, QByteArray xpr);
 	// void DLLDownload(QString id);
 	void DLLListRefresh();
@@ -70,6 +72,7 @@ private slots:
 	void on_account_info_refreshed(QNetworkReply *rep);
 	void iconIsActived(QSystemTrayIcon::ActivationReason);
 	void closeEvent(QCloseEvent * e);
+	void on_guard_died();
 
 public slots:
 	void on_dll_finished(bool);
