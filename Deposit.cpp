@@ -19,6 +19,7 @@ void Deposit::on_btnClose_clicked()
 
 void Deposit::on_btnGetCode_clicked()
 {
+	ui.btnGetCode->setDisabled(true);
 	ui.lbQRCode->setText(QString::fromWCharArray(L"<h1>正在获取……</h1>"));
 	QByteArray reqdata;
 	reqdata.append("username=");
@@ -46,4 +47,5 @@ void Deposit::on_QRcode_got(QNetworkReply *rep)
 	rep->deleteLater();
 	ui.lbQRCode->setText(respstr);
 	disconnect(&accessmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_QRcode_got(QNetworkReply*)));
+	ui.btnGetCode->setDisabled(false);
 }

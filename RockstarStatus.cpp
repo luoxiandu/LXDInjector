@@ -18,7 +18,7 @@ void RockstarStatus::doget()
 	}
 	else
 	{
-		emit reporterr(QString::fromWCharArray(L"获取失败！"));
+		emit reporterr(QString::fromWCharArray(L"Rockstar服务器状态获取失败！可能被墙了，请开梯子试试。"));
 	}
 	return;
 }
@@ -31,7 +31,7 @@ void RockstarStatus::on_get_finished(QNetworkReply *rep)
 	QJsonDocument respjson = QJsonDocument::fromJson(respstr.toUtf8().data());
 	if (respjson.isNull() || respjson.isEmpty())
 	{
-		emit reporterr(QString::fromWCharArray(L"获取失败！"));
+		emit reporterr(QString::fromWCharArray(L"Rockstar服务器状态获取失败！Rockstar服务器回传的信息格式错误。"));
 	}
 	else
 	{

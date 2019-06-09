@@ -16,6 +16,7 @@
 #include "DLLHandler.h"
 #include "DLLRenamer.h"
 #include "Deposit.h"
+#include "frmGameAccountService.h"
 #include "RockstarStatus.h"
 
 class LXDInjector : public QMainWindow
@@ -68,6 +69,7 @@ private slots:
 	void on_actiongetRockstarStatus_triggered();
 	void on_actionRefreshAccount_triggered();
 	void on_actionDeposit_triggered();
+	void on_actionGameAccountService_triggered();
 	void on_lstCheats_currentIndexChanged(int);
 	void on_progress_reported(qint64, qint64);
 	void on_dll_list_refreshed(QNetworkReply *rep);

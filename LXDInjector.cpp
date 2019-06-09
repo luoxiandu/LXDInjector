@@ -291,6 +291,20 @@ void LXDInjector::on_actionDeposit_triggered()
 	}
 }
 
+void LXDInjector::on_actionGameAccountService_triggered()
+{
+	if (!isBeggar)
+	{
+		frmGameAccountService w;
+		w.exec();
+		AccountInfoRefresh();
+	}
+	else
+	{
+		this->setStatus(L"试用用户无法购买官方账号服务！");
+	}
+}
+
 void LXDInjector::on_actiongetRockstarStatus_triggered()
 {
 	RockstarStatusThread = new QThread(this);
@@ -530,6 +544,7 @@ void LXDInjector::on_account_info_refreshed(QNetworkReply *rep)
 					QJsonObject payloadobj = jsonvalpayload.toObject();
 					double balance = payloadobj.value(QString::fromWCharArray(L"balance")).toDouble();
 					this->isBeggar = payloadobj.value(QString::fromWCharArray(L"isBeggar")).toBool();
+					((LXDQApp *)qApp)->prices = payloadobj.value(QString::fromWCharArray(L"prices")).toObject();
 					QString t;
 					if(!isBeggar)
 						t = QString::fromWCharArray(L"洛仙都 V") + ((LXDQApp *)qApp)->ver + QString::fromWCharArray(L" 登录用户：") + sessionkey.split("::")[0] + QString::fromWCharArray(L" 余额：%1元").arg(balance);
