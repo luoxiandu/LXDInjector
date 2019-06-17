@@ -6,6 +6,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QSettings>
+#include <QLocalSocket>
 
 class frmLogin : public QDialog
 {

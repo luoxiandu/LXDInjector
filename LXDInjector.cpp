@@ -100,7 +100,7 @@ LXDInjector::LXDInjector(QWidget *parent)
 	GuardSocket.connectToServer("LXDGuardPipe");
 	if (!GuardSocket.waitForConnected(-1))
 	{
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败#2，程序自动退出！"));
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败#2，请检查本软件是否遭到篡改，或关闭任何防病毒程序。"));
 		message.setWindowIcon(ico);
 		message.exec();
 		exit(0);

@@ -9,7 +9,7 @@ frmLogin::frmLogin(QWidget *parent)
 	// 启动守护进程
 	if (!QProcess::startDetached("LXDGuard.exe"))
 	{
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败#1，程序自动退出！"));
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败#1，请检查本软件是否遭到篡改，或关闭任何防病毒程序。"));
 		message.setWindowIcon(ico);
 		message.exec();
 		exit();
@@ -207,5 +207,7 @@ void frmLogin::on_btnLogin_clicked()
 
 void frmLogin::on_btnQuit_clicked()
 {
+	QLocalSocket sock;
+	sock.connectToServer("LXDGuardPipe");
 	this->exit();
 }
