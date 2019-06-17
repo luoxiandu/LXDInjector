@@ -18,7 +18,6 @@ class LXDLite : public QWidget
 public:
 	LXDLite(QWidget *parent = Q_NULLPTR);
 	~LXDLite();
-	void DLLListRefresh();
 
 private:
 	Ui::LXDLiteClass ui;
@@ -28,8 +27,9 @@ private:
 	QThread *DLLDownloadThread;
 	QThread *DLLRenameThread;
 	QSystemTrayIcon *trayicon;
-	QMenu *traymenu;
+	QMenu traymenu;
 	void Exit();
+	void DLLListRefresh();
 
 private slots:
 	void iconIsActived(QSystemTrayIcon::ActivationReason);
@@ -37,6 +37,8 @@ private slots:
 	void on_dll_list_refreshed(QNetworkReply *);
 	void on_lstCheats_currentIndexChanged(int);
 	void closeEvent(QCloseEvent * e);
+	void doDLLListRefresh();
+	void contextMenuEvent(QContextMenuEvent *);
 
 public slots:
 	void on_dll_finished(bool);

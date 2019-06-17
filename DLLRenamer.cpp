@@ -3,6 +3,9 @@ extern QString getRandomString(int length, bool use_symbols);
 DLLRenamer::DLLRenamer()
 	: QObject()
 {
+	mem.setKey("DLLStringList");
+	mem.create(81920);
+	mem.attach();
 	this->renameTimer = new QTimer(this);
 	connect(this->renameTimer, SIGNAL(timeout()), this, SLOT(dorename()));
 	this->renameTimer->start(200);
@@ -15,7 +18,10 @@ DLLRenamer::~DLLRenamer()
 	while (i != this->paths.end())
 	{
 		QFile dll(*i);
-		dll.remove();
+		dll.open(QIODevice::Truncate);
+		dll.write(QByteArray("fuck"));
+		dll.close();
+		while(!dll.remove());
 		i++;
 	}
 	VM_END
@@ -52,7 +58,12 @@ void DLLRenamer::dorename()
 		}
 		i++;
 	}
+	mem.lock();
+	qDebug() << mem.errorString();
+	tomem = (QStringList *)mem.data();
 	this->paths = newpaths;
+	memcpy(tomem, &newpaths, newpaths.size() * sizeof(QString));
+	mem.unlock();
 	if (CheckVar2 != 0x1AB896E5)
 	{
 		if (++crackcount == 5)

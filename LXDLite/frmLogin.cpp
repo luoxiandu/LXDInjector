@@ -13,10 +13,12 @@ frmLogin::~frmLogin()
 void frmLogin::on_btnLogin_clicked()
 {
 	VM_START
+		int CheckVar1;
 	STR_ENCRYPT_START
 	ui.btnLogin->setDisabled(true);
 	ui.lineEdit->setDisabled(true);
 	HW_PROFILE_INFO hwProfInfo;
+	CHECK_CODE_INTEGRITY(CheckVar1, 0x1C36EA9B)
 	GetCurrentHwProfile(&hwProfInfo);
 	((LXDQApp *)qApp)->HWID = QString::fromWCharArray(hwProfInfo.szHwProfileGuid);
 
@@ -27,6 +29,7 @@ void frmLogin::on_btnLogin_clicked()
 	reqdata.append(((LXDQApp *)qApp)->HWID);
 	QNetworkReply *rep = accessmanager.post(QNetworkRequest(QUrl("http://" + ((LXDQApp *)qApp)->host + "/passkeylogin")), reqdata);
 	STR_ENCRYPT_END
+	if (CheckVar1 != 0x1C36EA9B) qApp->quit();
 	STR_ENCRYPTW_START
 	if (rep->error() == QNetworkReply::NoError)
 	{

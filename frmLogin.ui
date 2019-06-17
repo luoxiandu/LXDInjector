@@ -91,7 +91,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>试用</string>
+    <string>免登录</string>
    </property>
    <property name="autoDefault">
     <bool>false</bool>

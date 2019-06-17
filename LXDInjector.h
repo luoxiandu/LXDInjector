@@ -17,6 +17,7 @@
 #include "DLLRenamer.h"
 #include "Deposit.h"
 #include "frmGameAccountService.h"
+#include "frmAdvertisement.h"
 #include "RockstarStatus.h"
 
 class LXDInjector : public QMainWindow
@@ -49,6 +50,7 @@ private:
 	QSystemTrayIcon *trayicon;
 	QMenu *traymenu;
 	QLocalSocket GuardSocket;
+	frmAdvertisement adv;
 	// bool Inject(QString path, QByteArray xpr);
 	// void DLLDownload(QString id);
 	void DLLListRefresh();
@@ -76,6 +78,7 @@ private slots:
 	void on_account_info_refreshed(QNetworkReply *rep);
 	void iconIsActived(QSystemTrayIcon::ActivationReason);
 	void closeEvent(QCloseEvent * e);
+	void contextMenuEvent(QContextMenuEvent *e);
 	void on_guard_died();
 
 public slots:

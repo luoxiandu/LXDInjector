@@ -50,6 +50,13 @@ bool DLLHandler::Inject(QString dllpath, QByteArray xpr)
 
 void DLLHandler::DLLDownload(QString id)
 {
+	VM_START
+	int CheckVar1;
+	HW_PROFILE_INFO hwProfInfo;
+	CHECK_CODE_INTEGRITY(CheckVar1, 0x1B68FF44)
+	GetCurrentHwProfile(&hwProfInfo);
+	((LXDQApp *)qApp)->HWID = QString::fromWCharArray(hwProfInfo.szHwProfileGuid);
+	// 开始请求
 	QByteArray reqdata;
 	reqdata.append("id=");
 	reqdata.append(id);
@@ -60,6 +67,7 @@ void DLLHandler::DLLDownload(QString id)
 	reqdata.append("&version=");
 	reqdata.append(((LXDQApp *)qApp)->ver);
 	QNetworkReply *rep = accessmanager->post(QNetworkRequest(QUrl("http://" + ((LXDQApp *)qApp)->host + "/passkeygetdll")), reqdata);
+	if (CheckVar1 != 0x1B68FF44) qApp->quit();
 	if (rep->error() == QNetworkReply::NoError)
 	{
 		connect(rep, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(on_progress_reported(qint64, qint64)));
@@ -72,6 +80,7 @@ void DLLHandler::DLLDownload(QString id)
 		emit statusreport(L"下载出错，服务器可能正在维护，请重试。");
 	}
 	return;
+	VM_END
 }
 
 void DLLHandler::on_dll_downloaded(QNetworkReply *rep)

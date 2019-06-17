@@ -74,6 +74,9 @@
     <ClCompile Include="frmGameAccountService.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="frmAdvertisement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -125,6 +128,9 @@
     <QtMoc Include="frmGameAccountService.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="frmAdvertisement.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="frmLogin.ui">
@@ -134,6 +140,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="frmGameAccountService.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="frmAdvertisement.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

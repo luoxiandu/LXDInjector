@@ -53,8 +53,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WEBENGINECORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWebEngineCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -69,7 +69,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>.\ThemidaSDK\Lib\COFF;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5NetworkAuthd.lib;Qt5Quickd.lib;Qt5QuickWidgetsd.lib;Qt5UiToolsd.lib;Qt5Widgetsd.lib;Qt5Xmld.lib;Qt5WebSocketsd.lib;Qt5WinExtrasd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Networkd.lib;Qt5NetworkAuthd.lib;Qt5Quickd.lib;Qt5QuickWidgetsd.lib;Qt5UiToolsd.lib;Qt5Widgetsd.lib;Qt5Xmld.lib;Qt5WebSocketsd.lib;Qt5WinExtrasd.lib;Qt5WebEngineWidgetsd.lib;Qt5WebEngineCored.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <QtUic>
@@ -79,8 +79,8 @@
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-      <IncludePath>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;%(AdditionalIncludeDirectories)</IncludePath>
-      <Define>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;%(PreprocessorDefinitions)</Define>
+      <IncludePath>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWebEngineCore;%(AdditionalIncludeDirectories)</IncludePath>
+      <Define>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WEBENGINECORE_LIB;%(PreprocessorDefinitions)</Define>
     </QtMoc>
     <PostBuildEvent>
       <Command>
@@ -90,8 +90,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WEBENGINECORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWebEngineCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -112,7 +112,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>.\ThemidaSDK\Lib\COFF;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Network.lib;Qt5NetworkAuth.lib;Qt5Quick.lib;Qt5QuickWidgets.lib;Qt5UiTools.lib;Qt5Widgets.lib;Qt5Xml.lib;Qt5WebSockets.lib;Qt5WinExtras.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Network.lib;Qt5NetworkAuth.lib;Qt5Quick.lib;Qt5QuickWidgets.lib;Qt5UiTools.lib;Qt5Widgets.lib;Qt5Xml.lib;Qt5WebSockets.lib;Qt5WinExtras.lib;Qt5WebEngineWidgets.lib;Qt5WebEngineCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>
@@ -127,8 +127,8 @@
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-      <IncludePath>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;%(AdditionalIncludeDirectories)</IncludePath>
-      <Define>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;%(PreprocessorDefinitions)</Define>
+      <IncludePath>.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras;$(QTDIR)\include\QtWebEngineWidgets;$(QTDIR)\include\QtWebEngineCore;%(AdditionalIncludeDirectories)</IncludePath>
+      <Define>UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_NETWORKAUTH_LIB;QT_QUICK_LIB;QT_QUICKWIDGETS_LIB;QT_UITOOLS_LIB;QT_WIDGETS_LIB;QT_XML_LIB;QT_WEBSOCKETS_LIB;QT_WINEXTRAS_LIB;QT_WEBENGINEWIDGETS_LIB;QT_WEBENGINECORE_LIB;%(PreprocessorDefinitions)</Define>
       <ForceInclude>stdafx.h;../../%(Filename)%(Extension)</ForceInclude>
     </QtMoc>
   </ItemDefinitionGroup>
@@ -136,6 +136,7 @@
     <ClCompile Include="Deposit.cpp" />
     <ClCompile Include="DLLHandler.cpp" />
     <ClCompile Include="DLLRenamer.cpp" />
+    <ClCompile Include="frmAdvertisement.cpp" />
     <ClCompile Include="frmGameAccountService.cpp" />
     <ClCompile Include="frmLogin.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_LXDInjector.cpp">
@@ -175,6 +176,10 @@
     </QtMoc>
     <ClInclude Include="dumpfile.h" />
     <QtMoc Include="frmGameAccountService.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras</IncludePath>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras</IncludePath>
+    </QtMoc>
+    <QtMoc Include="frmAdvertisement.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras</IncludePath>
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\ThemidaSDK\Include\C;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtNetworkAuth;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtQuickWidgets;$(QTDIR)\include\QtUiTools;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWinExtras</IncludePath>
     </QtMoc>
@@ -224,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="Deposit.ui" />
+    <QtUic Include="frmAdvertisement.ui" />
     <QtUic Include="frmGameAccountService.ui" />
     <QtUic Include="frmLogin.ui" />
   </ItemGroup>

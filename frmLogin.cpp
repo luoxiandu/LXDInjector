@@ -6,6 +6,14 @@ frmLogin::frmLogin(QWidget *parent)
 	: QDialog(parent)
 {
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
+	// 启动守护进程
+	if (!QProcess::startDetached("LXDGuard.exe"))
+	{
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败#1，程序自动退出！"));
+		message.setWindowIcon(ico);
+		message.exec();
+		exit();
+	}
 	setWindowIcon(ico);
 	ui.setupUi(this);
 	accessmanager = new QNetworkAccessManager(this);

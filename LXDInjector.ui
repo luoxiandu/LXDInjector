@@ -41,7 +41,7 @@
       <x>100</x>
       <y>11</y>
       <width>381</width>
-      <height>21</height>
+      <height>24</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -60,7 +60,7 @@
       <x>10</x>
       <y>10</y>
       <width>81</width>
-      <height>21</height>
+      <height>24</height>
      </rect>
     </property>
     <property name="font">

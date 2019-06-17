@@ -286,7 +286,7 @@ QPushButton:default {
     border: 1px solid #575d65;
     color: #bbb;
     font: bold;
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #344a65, stop:1 #263549);
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #344a65, stop:1 #263549); /* 365880 284364 344a65 263549 */
 }
 QPushButton:default:pressed {
     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #263549, stop:1 #344a65);

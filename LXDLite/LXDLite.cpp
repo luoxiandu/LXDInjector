@@ -45,13 +45,15 @@ LXDLite::LXDLite(QWidget *parent)
 	connect(downloader, SIGNAL(DLLfilereport(QString)), renamer, SLOT(setpath(QString)));
 	connect(DLLRenameThread, SIGNAL(finished), renamer, SLOT(deleteLater));
 	// 托盘菜单
-	traymenu = new QMenu();
-	traymenu->addAction(QString::fromWCharArray(L"退出"), (qApp->quit));
+	QAction *actionRefresh = new QAction(QString::fromWCharArray(L"刷新外挂列表"), this);
+	connect(actionRefresh, SIGNAL(triggered()), this, SLOT(doDLLListRefresh()));
+	traymenu.addAction(actionRefresh);
+	traymenu.addAction(QString::fromWCharArray(L"退出"), (qApp->quit));
 	// 托盘图标
 	trayicon = new QSystemTrayIcon();
 	trayicon->setIcon(ico);
 	trayicon->setToolTip(QString::fromWCharArray(L"洛仙都纯享版"));
-	trayicon->setContextMenu(traymenu);
+	trayicon->setContextMenu(&traymenu);
 	connect(trayicon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
 	trayicon->show();
 	// 启动两个线程
@@ -69,7 +71,6 @@ LXDLite::~LXDLite()
 	STR_ENCRYPT_START
 	process->execute("taskkill /F /IM GTA5.exe");
 	STR_ENCRYPT_END
-	QIcon ico(":/LXDLite/LXDLite.ico");
 	DLLDownloadThread->quit();
 	DLLDownloadThread->wait();
 	DLLRenameThread->quit();
@@ -81,6 +82,11 @@ LXDLite::~LXDLite()
 void LXDLite::Exit()
 {
 	qApp->quit();
+}
+
+void LXDLite::contextMenuEvent(QContextMenuEvent *e)
+{
+	traymenu.exec(e->globalPos());
 }
 
 void LXDLite::iconIsActived(QSystemTrayIcon::ActivationReason reason)
@@ -120,6 +126,7 @@ void LXDLite::on_lstCheats_currentIndexChanged(int index)
 
 void LXDLite::on_btnInject_clicked()
 {
+	VM_START
 	if (CheckAppRunningStatus(tr("GTA5.exe")))
 	{
 		ui.btnInject->setDisabled(true);
@@ -131,10 +138,23 @@ void LXDLite::on_btnInject_clicked()
 	{
 		ui.lbStatus->setText(QString::fromWCharArray(L"请先运行游戏！"));
 	}
+	VM_END
+}
+
+void LXDLite::doDLLListRefresh()
+{
+	DLLListRefresh();
 }
 
 void LXDLite::DLLListRefresh()
 {
+	VM_START
+	int CheckVar1;
+	HW_PROFILE_INFO hwProfInfo;
+	CHECK_CODE_INTEGRITY(CheckVar1, 0x5C9EAA6F)
+	GetCurrentHwProfile(&hwProfInfo);
+	((LXDQApp *)qApp)->HWID = QString::fromWCharArray(hwProfInfo.szHwProfileGuid);
+	// 开始请求
 	QByteArray reqdata;
 	reqdata.append("passkey=");
 	reqdata.append(((LXDQApp *)qApp)->passkey);
@@ -143,6 +163,7 @@ void LXDLite::DLLListRefresh()
 	reqdata.append("&version=");
 	reqdata.append(((LXDQApp *)qApp)->ver);
 	QNetworkReply *rep = accessmanager.post(QNetworkRequest(QUrl("http://" + ((LXDQApp *)qApp)->host + "/passkeygetdlllist")), reqdata);
+	if (CheckVar1 != 0x5C9EAA6F) qApp->quit();
 	if (rep->error() == QNetworkReply::NoError)
 	{
 		connect(&accessmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_dll_list_refreshed(QNetworkReply*)));
@@ -152,10 +173,12 @@ void LXDLite::DLLListRefresh()
 		ui.lbStatus->setText(QString::fromWCharArray(L"可用外挂列表接收出错，服务器可能正在维护，请重试。"));
 	}
 	return;
+	VM_END
 }
 
 void LXDLite::on_dll_list_refreshed(QNetworkReply *rep)
 {
+	VM_START
 	if (rep->url().path() == QString::fromWCharArray(L"/passkeygetdlllist"))
 	{
 		QString respstr = rep->readAll();
@@ -205,6 +228,7 @@ void LXDLite::on_dll_list_refreshed(QNetworkReply *rep)
 
 	}
 	return;
+	VM_END
 }
 
 void LXDLite::on_dll_finished(bool injectcompleted)

@@ -86,8 +86,8 @@ void frmGameAccountService::docalculate()
 	qreal total = 0;
 	qint64 totalGameCoin = megalodon * 8000000 + whale * 3500000 + greatwhite * 1250000 + bullshark * 500000 + tigershark * 200000 + redshark * 100000;
 	total += megalodon * megalodonprice + whale * whaleprice + greatwhite * greatwhiteprice + bullshark * bullsharkprice + tigershark * tigersharkprice + redshark * redsharkprice;
-	if (level != 0) total += 10;
-	if (unlock) total += 10;
+	if (level != 0) total += levelprice;
+	if (unlock) total += unlockprice;
 	ui.lbTotal->setText(QString::fromWCharArray(L"<strong>可获得游戏币</strong><br>$%1<br><strong>订单总价</strong><br>￥%2元").arg(totalGameCoin).arg(total));
 }
 

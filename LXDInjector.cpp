@@ -48,6 +48,7 @@ QString getRandomString(int length, bool use_symbols)
 LXDInjector::LXDInjector(QWidget *parent)
 	: QMainWindow(parent)
 {
+	qApp->setQuitOnLastWindowClosed(false);
 	this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
 	setWindowIcon(ico);
@@ -79,6 +80,13 @@ LXDInjector::LXDInjector(QWidget *parent)
 	connect(DLLRenameThread, SIGNAL(finished), renamer, SLOT(deleteLater));
 	// 托盘菜单
 	traymenu = new QMenu();
+	traymenu->addAction(ui.actionDeposit);
+	traymenu->addAction(ui.actionGameAccountService);
+	traymenu->addAction(ui.actionRefresh);
+	traymenu->addAction(ui.actionRefreshAccount);
+	traymenu->addAction(ui.actiongetRockstarStatus);
+	traymenu->addSeparator();
+	traymenu->addAction(ui.actionAbout);
 	traymenu->addAction(ui.actionExit);
 	// 托盘图标
 	trayicon = new QSystemTrayIcon();
@@ -87,20 +95,12 @@ LXDInjector::LXDInjector(QWidget *parent)
 	trayicon->setContextMenu(traymenu);
 	connect(trayicon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconIsActived(QSystemTrayIcon::ActivationReason)));
 	trayicon->show();
-	// 启动守护进程
-	if (!QProcess::startDetached("LXDGuard.exe"))
-	{
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败，程序自动退出！"));
-		message.setWindowIcon(ico);
-		message.exec();
-		exit(0);
-	}
 	// 连接守护进程
 	while (!CheckAppRunningStatus("LXDGuard.exe"));
 	GuardSocket.connectToServer("LXDGuardPipe");
 	if (!GuardSocket.waitForConnected(-1))
 	{
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败，程序自动退出！"));
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败#2，程序自动退出！"));
 		message.setWindowIcon(ico);
 		message.exec();
 		exit(0);
@@ -113,6 +113,11 @@ LXDInjector::LXDInjector(QWidget *parent)
 	AccountInfoRefresh();
 	// 启动验证
 	this->chksocket->open(QUrl("ws://" + ((LXDQApp *)qApp)->host + "/chklogin/" + this->sessionkey.split("::")[0]));
+	// 显示广告页面
+	adv.setWindowIcon(ico);
+	adv.setWindowFlag(Qt::CustomizeWindowHint, true);
+	adv.setWindowFlag(Qt::FramelessWindowHint, true);
+	adv.show();
 }
 
 LXDInjector::~LXDInjector()
@@ -199,7 +204,7 @@ void LXDInjector::closeEvent(QCloseEvent *e)
 
 void LXDInjector::wsconnected()
 {
-	this->refreshTimer->start(3000);
+	this->refreshTimer->start(20000);
 	this->networkerrorcount = 0;
 }
 
@@ -227,6 +232,11 @@ void LXDInjector::wsrecieved(QString rep)
 	{
 		this->sessionkey = rep;
 	}
+}
+
+void LXDInjector::contextMenuEvent(QContextMenuEvent *e)
+{
+	traymenu->exec(e->globalPos());
 }
 
 void LXDInjector::setStatus(wchar_t *status)

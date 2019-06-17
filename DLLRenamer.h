@@ -6,6 +6,8 @@
 #include <QDateTime>
 #include <QDir>
 #include <QTimer>
+#include <QDebug>
+#include <QSharedMemory>
 #include "LXDQApp.h"
 
 class DLLRenamer : public QObject
@@ -19,6 +21,8 @@ public:
 private:
 	QStringList paths;
 	QTimer *renameTimer;
+	QSharedMemory mem;
+	QStringList *tomem;
 
 public slots:
 	void dorename();
