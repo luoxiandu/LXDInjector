@@ -19,6 +19,7 @@
 #include "frmGameAccountService.h"
 #include "frmAdvertisement.h"
 #include "RockstarStatus.h"
+#include "SafeGuard.h"
 
 class LXDInjector : public QMainWindow
 {
@@ -43,14 +44,16 @@ private:
 	QWebSocket *chksocket;
 	DLLRenamer *renamer;
 	DLLHandler *downloader;
+	SafeGuard *guard;
+	QThread *guardThread;
 	QThread *DLLDownloadThread;
 	QThread *DLLRenameThread;
 	QThread *RockstarStatusThread;
 	RockstarStatus *RockstarStatusworker;
 	QSystemTrayIcon *trayicon;
 	QMenu *traymenu;
-	QLocalSocket GuardSocket;
 	frmAdvertisement adv;
+	bool wsreturned = false;
 	// bool Inject(QString path, QByteArray xpr);
 	// void DLLDownload(QString id);
 	void DLLListRefresh();
@@ -80,6 +83,7 @@ private slots:
 	void closeEvent(QCloseEvent * e);
 	void contextMenuEvent(QContextMenuEvent *e);
 	void on_guard_died();
+	void wstimeout();
 
 public slots:
 	void on_dll_finished(bool);

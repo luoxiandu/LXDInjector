@@ -32,8 +32,8 @@ bool DLLHandler::Inject(QString dllpath, QByteArray xpr)
 		QProcess *Xenos = new QProcess(this);
 		Xenos->start("Xenos64.exe", QStringList() << "--run" << xprinfo.filePath());
 		result = Xenos->waitForFinished();
-		// QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), Xenos->readAllStandardError());
-		// message.exec();
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), Xenos->readAllStandardError());
+		message.exec();
 	}
 	else
 	{

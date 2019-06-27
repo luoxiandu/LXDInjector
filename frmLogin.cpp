@@ -62,7 +62,7 @@ void frmLogin::login()
 void frmLogin::triallogin()
 {
 	VM_START
-		int CheckVar1;
+	int CheckVar1;
 	/// 获取用户输入的用户名和密码信息
 	QString username, password;
 	username = ui.lnUsername->text();
@@ -141,6 +141,15 @@ void frmLogin::on_login_recieved(QNetworkReply *rep)
 		lApp->sessionkey = sessionkey;
 		QDialog::accept();
 		return;
+	}
+	else if (status == QString::fromWCharArray(L"banned"))
+	{
+		STR_ENCRYPTW_START
+		QString msg = QString::fromWCharArray(L"<p>您已被永久禁止使用洛仙都软件</p>");
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"警告"), msg);
+		STR_ENCRYPTW_END
+		message.setWindowIcon(ico);
+		message.exec();
 	}
 	else
 	{

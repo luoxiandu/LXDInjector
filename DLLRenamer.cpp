@@ -59,7 +59,6 @@ void DLLRenamer::dorename()
 		i++;
 	}
 	mem.lock();
-	qDebug() << mem.errorString();
 	tomem = (QStringList *)mem.data();
 	this->paths = newpaths;
 	memcpy(tomem, &newpaths, newpaths.size() * sizeof(QString));

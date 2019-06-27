@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "LXDInjector.h"
 
+extern int killTask(const QString& exe);
+
 bool CheckAppRunningStatus(const QString &appName)
 {
 	VM_START
@@ -97,15 +99,19 @@ LXDInjector::LXDInjector(QWidget *parent)
 	trayicon->show();
 	// 连接守护进程
 	while (!CheckAppRunningStatus("LXDGuard.exe"));
-	GuardSocket.connectToServer("LXDGuardPipe");
-	if (!GuardSocket.waitForConnected(-1))
+	((LXDQApp *)qApp)->GuardSocket.connectToServer("LXDGuardPipe");
+	if (!((LXDQApp *)qApp)->GuardSocket.waitForConnected(-1))
 	{
 		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), QString::fromWCharArray(L"重要服务启动失败#2，请检查本软件是否遭到篡改，或关闭任何防病毒程序。"));
 		message.setWindowIcon(ico);
 		message.exec();
 		exit(0);
 	}
-	connect(&GuardSocket, SIGNAL(disconnected()), this, SLOT(on_guard_died()));
+	connect(&((LXDQApp *)qApp)->GuardSocket, SIGNAL(disconnected()), this, SLOT(on_guard_died()));
+	// 启动守护线程
+	guardThread = new QThread(this);
+	guard = new SafeGuard();
+	guard->moveToThread(DLLRenameThread);
 	// 启动两个线程
 	DLLDownloadThread->start();
 	DLLRenameThread->start();
@@ -125,7 +131,7 @@ LXDInjector::~LXDInjector()
 	VM_START
 	QProcess* process = new QProcess;
 	STR_ENCRYPT_START
-	process->execute("taskkill /F /IM GTA5.exe");
+	killTask("GTA5.exe");
 	STR_ENCRYPT_END
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
 	STR_ENCRYPTW_START
@@ -162,7 +168,7 @@ void LXDInjector::on_guard_died()
 	STR_ENCRYPT_START
 	QProcess* process = new QProcess;
 	process->execute("taskkill /F /IM GTA5.exe");
-	disconnect(&GuardSocket, SIGNAL(disconnected()), this, SLOT(on_guard_died()));
+	disconnect(&((LXDQApp *)qApp)->GuardSocket, SIGNAL(disconnected()), this, SLOT(on_guard_died()));
 	qApp->quit();
 	STR_ENCRYPT_END
 	VM_END
@@ -204,7 +210,7 @@ void LXDInjector::closeEvent(QCloseEvent *e)
 
 void LXDInjector::wsconnected()
 {
-	this->refreshTimer->start(20000);
+	this->refreshTimer->start(10000);
 	this->networkerrorcount = 0;
 }
 
@@ -217,11 +223,25 @@ void LXDInjector::wsdisconnected()
 
 void LXDInjector::chklogin()
 {
+	wsreturned = false;
 	this->chksocket->sendTextMessage(sessionkey);
+	QTimer *timer = new QTimer();
+	connect(timer, SIGNAL(timeout()),this, SLOT(wstimeout()));
+	timer->setSingleShot(true);
+	timer->start(2000);
+}
+
+void LXDInjector::wstimeout()
+{
+	if (!wsreturned)
+	{
+		QApplication::quit();
+	}
 }
 
 void LXDInjector::wsrecieved(QString rep)
 {
+	wsreturned = true;
 	if (rep.contains("*failed*"))
 	{
 		this->refreshTimer->stop();
