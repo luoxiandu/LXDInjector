@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>frmDirectoryCorrection</class>
+ <widget class="QWidget" name="frmDirectoryCorrection">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>507</width>
+    <height>93</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GTA5路径设置</string>
+  </property>
+  <widget class="QLabel" name="lb1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>0</y>
+     <width>161</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>当前注册表中的GTA路径：</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lePath">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>491</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="dragEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnBrowse">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>50</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>设置新路径</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnConfirm">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>50</y>
+     <width>75</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>确定</string>
+   </property>
+   <property name="autoDefault">
+    <bool>true</bool>
+   </property>
+   <property name="default">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

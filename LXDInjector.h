@@ -11,6 +11,8 @@
 #include <QSystemTrayIcon>
 #include <QThread>
 #include <QLocalSocket>
+#include <QSound>
+#include <QAudioDeviceInfo>
 #include "ui_LXDInjector.h"
 #include "LXDQApp.h"
 #include "DLLHandler.h"
@@ -18,6 +20,7 @@
 #include "Deposit.h"
 #include "frmGameAccountService.h"
 #include "frmAdvertisement.h"
+#include "frmDirectoryCorrection.h"
 #include "RockstarStatus.h"
 #include "SafeGuard.h"
 
@@ -35,6 +38,7 @@ private:
 	bool isBeggar = true;
 	bool loginoutdated = false;
 	bool isFirstRun = true;
+	bool aboutToQuit = false;
 	int networkerrorcount = 0;
 	Ui::LXDInjectorClass ui;
 	QNetworkAccessManager *accessmanager;
@@ -58,6 +62,7 @@ private:
 	// void DLLDownload(QString id);
 	void DLLListRefresh();
 	void AccountInfoRefresh();
+	void netquit();
 	
 
 private slots:
@@ -75,12 +80,14 @@ private slots:
 	void on_actionRefreshAccount_triggered();
 	void on_actionDeposit_triggered();
 	void on_actionGameAccountService_triggered();
+	void on_actionDirectoryCorrection_triggered();
 	void on_lstCheats_currentIndexChanged(int);
 	void on_progress_reported(qint64, qint64);
 	void on_dll_list_refreshed(QNetworkReply *rep);
 	void on_account_info_refreshed(QNetworkReply *rep);
 	void iconIsActived(QSystemTrayIcon::ActivationReason);
 	void closeEvent(QCloseEvent * e);
+	bool nativeEvent(const QByteArray &type, void * msg, long * result);
 	void contextMenuEvent(QContextMenuEvent *e);
 	void on_guard_died();
 	void wstimeout();

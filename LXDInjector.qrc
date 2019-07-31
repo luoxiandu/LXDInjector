@@ -3,6 +3,10 @@
         <file>Resources/LXD.png</file>
         <file>LXDInjector.ico</file>
         <file>cat.png</file>
+        <file>sound_injecting.wav</file>
+        <file>sound_installing.wav</file>
+        <file>sound_success.wav</file>
+        <file>sound_welcome.wav</file>
     </qresource>
     <qresource prefix="/RC_ICON">
         <file>LXDInjector.ico</file>

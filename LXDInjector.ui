@@ -70,7 +70,7 @@
      </font>
     </property>
     <property name="text">
-     <string>请选择外挂：</string>
+     <string>请选择灵魂：</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnInject">
@@ -83,7 +83,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>一键开挂！</string>
+     <string>注入灵魂！</string>
     </property>
     <property name="default">
      <bool>true</bool>
@@ -145,6 +145,7 @@
     <addaction name="actionRefreshAccount"/>
     <addaction name="actionRefresh"/>
     <addaction name="actionGameAccountService"/>
+    <addaction name="actionDirectoryCorrection"/>
     <addaction name="actiongetRockstarStatus"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -212,6 +213,11 @@
   <action name="actionGameAccountService">
    <property name="text">
     <string>购买游戏服务</string>
+   </property>
+  </action>
+  <action name="actionDirectoryCorrection">
+   <property name="text">
+    <string>修改GTA注册表路径</string>
    </property>
   </action>
  </widget>

@@ -6,6 +6,7 @@ frmLogin::frmLogin(QWidget *parent)
 	: QDialog(parent)
 {
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
+	this->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);
 	// 启动守护进程
 	if (!QProcess::startDetached("LXDGuard.exe"))
 	{
@@ -145,7 +146,8 @@ void frmLogin::on_login_recieved(QNetworkReply *rep)
 	else if (status == QString::fromWCharArray(L"banned"))
 	{
 		STR_ENCRYPTW_START
-		QString msg = QString::fromWCharArray(L"<p>您已被永久禁止使用洛仙都软件</p>");
+		QString msg = QString::fromWCharArray(L"<p>在您上次使用客户端的过程中检测到恶性破解，已禁止您使用洛仙都软件。</p>");
+		msg += QString::fromWCharArray(L"<p>如果您喜欢我们提供的外挂请考虑&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=c9f0a58ddf654dfee69356d744d426607f5f2ed076c09c1be78e5af2a4f893a8\">加入洛仙都QQ群（105976356）</a>&nbsp;永久使用。</p>");
 		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"警告"), msg);
 		STR_ENCRYPTW_END
 		message.setWindowIcon(ico);

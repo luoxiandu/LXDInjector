@@ -45,25 +45,21 @@ int killTask(const QString& exe)
 		{
 			dwPid = pe32.th32ProcessID;
 			bRet = TRUE;
-			qDebug() << "zhaodao";
 			break;
 		}
 	}
 
 	CloseHandle(hProcessSnap);
-	qDebug() << dwPid;
 	//2、根据PID杀死进程
 	HANDLE hProcess = NULL;
 	//打开目标进程
 	hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, dwPid);
 	if (hProcess == NULL) {
-		qDebug() << "Open Process fAiled ,error:" << GetLastError();
 		return -1;
 	}
 	//结束目标进程
 	DWORD ret = TerminateProcess(hProcess, 0);
 	if (ret == 0) {
-		qDebug() << "kill task faild,error:" << GetLastError();
 		return -1;
 	}
 

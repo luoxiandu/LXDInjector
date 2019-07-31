@@ -32,13 +32,14 @@ bool DLLHandler::Inject(QString dllpath, QByteArray xpr)
 		QProcess *Xenos = new QProcess(this);
 		Xenos->start("Xenos64.exe", QStringList() << "--run" << xprinfo.filePath());
 		result = Xenos->waitForFinished();
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), Xenos->readAllStandardError());
-		message.exec();
+		if (!result)
+		{
+			emit showerr(Xenos->errorString() + "\n" +  Xenos->readAllStandardError());
+		}
 	}
 	else
 	{
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), tmpxpr.errorString());
-		message.exec();
+		emit showerr(tmpxpr.errorString());
 		emit statusreport(L"文件写入失败，请重试。");
 		result = false;
 	}
@@ -106,6 +107,8 @@ void DLLHandler::on_dll_downloaded(QNetworkReply *rep)
 					QJsonValue dllpayload = injectobj.value(tr("dll"));
 					QJsonValue xprpayload = injectobj.value(tr("xpr"));
 					QJsonValue rcpayload = injectobj.value(tr("resource"));
+					QJsonValue keypayload = injectobj.value(tr("keyfile"));
+					QJsonValue keynamepayload = injectobj.value(tr("keyfilename"));
 					QByteArray dllfile = QByteArray::fromBase64(dllpayload.toString().toLatin1());
 					QByteArray xprfile = QByteArray::fromBase64(xprpayload.toString().toLatin1());
 					if (!rcpayload.isUndefined())
@@ -131,30 +134,34 @@ void DLLHandler::on_dll_downloaded(QNetworkReply *rep)
 							}
 							else
 							{
-								// QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), QString::fromWCharArray(L"错误代码：%1\n").arg(process->error()) + process->errorString() + "\n" + QString::fromWCharArray(L"文件权限：%1\n").arg(tmprcinst.permissions()) + fname + "\n" + QString::fromWCharArray(L"权限设置：").arg(fuck));
-								// message.exec();
 								emit statusreport(L"特殊文件安装出现问题，可能会显示错乱");
 							}
 							tmprcinst.remove();
 						}
 						else
 						{
-							QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), tmprcinst.errorString());
-							message.exec();
+							emit showerr(tmprcinst.errorString());
 							emit statusreport(L"特殊文件安装器写入失败，请重试。");
 						}
 					}
 					QString dllname = QDir::tempPath() + "/" + getRandomString((rand() % 10) + 5, false) + ".bin";
-					// QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), dllname);
-					// message.exec();
 					QFile tmpdll(dllname);
 					if (tmpdll.open(QIODevice::WriteOnly))
 					{
+						if (!keypayload.isUndefined())
+						{
+							QString keyname = QDir::tempPath() + "/" + keynamepayload.toString();
+							QFile tmpkey(keyname);
+							if (tmpkey.open(QIODevice::WriteOnly))
+							{
+								QByteArray keyfile = QByteArray::fromBase64(keypayload.toString().toLatin1());
+								tmpkey.write(keyfile);
+								tmpkey.close();
+							}
+						}
 						tmpdll.write(dllfile);
 						QFileInfo dllinfo(tmpdll);
 						tmpdll.close();
-						// QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), dllinfo.filePath() + "\n" + xprinfo.filePath());
-						// message.exec();
 						if (injectcompleted = Inject(dllinfo.absoluteFilePath(), xprfile))
 						{
 							emit statusreport(L"注入完成，请开始游戏吧！");
@@ -167,16 +174,19 @@ void DLLHandler::on_dll_downloaded(QNetworkReply *rep)
 						QString newdllname = QDir::tempPath() + "/" + getRandomString((rand() % 10) + 20, true);
 						tmpdll.rename(newdllname);
 						QFileInfo newdllinfo(tmpdll);
-						// QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), newdllinfo.absoluteFilePath());
-						// message.exec();
+						if (!keypayload.isUndefined())
+						{
+							QString keyname = QDir::tempPath() + "/" + keynamepayload.toString();
+							QFile tmpkey(keyname);
+							tmpkey.remove();
+						}
 						QFile xenoslog("Xenos.log");
 						xenoslog.remove();
 						emit DLLfilereport(newdllinfo.absoluteFilePath());
 					}
 					else
 					{
-						QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), tmpdll.errorString());
-						message.exec();
+						emit showerr(tmpdll.errorString());
 						emit statusreport(L"外挂本体文件写入失败，请重试。");
 					}
 				}
@@ -184,11 +194,6 @@ void DLLHandler::on_dll_downloaded(QNetworkReply *rep)
 			else
 			{
 				emit statusreport(L"临时性网络错误，请重试。");
-				// QString msg = QString::fromWCharArray(L"登录校验失败，收到的结果为：status=") + status;
-				// msg += QString::fromWCharArray(L"\n本次出错的接口为：") + rep->url().toString();
-				// msg += QString::fromWCharArray(L"\nsessionkey为：") + this->sessionkey;
-				// QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"debug"), msg);
-				// message.exec();
 			}
 		}
 		disconnect(accessmanager, SIGNAL(finished(QNetworkReply*)), this, SLOT(on_dll_downloaded(QNetworkReply*)));

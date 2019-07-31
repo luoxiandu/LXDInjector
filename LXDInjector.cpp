@@ -74,6 +74,7 @@ LXDInjector::LXDInjector(QWidget *parent)
 	connect(downloader, SIGNAL(statusreport(QString, int)), this, SLOT(on_dll_status_reported(QString, int)));
 	connect(downloader, SIGNAL(finished(bool)), this, SLOT(on_dll_finished(bool)));
 	connect(DLLDownloadThread, SIGNAL(finished), downloader, SLOT(deleteLater));
+	connect(downloader, SIGNAL(showerr(QString)), this, SLOT(showError(QString)));
 	// DLL重命名监测线程
 	DLLRenameThread = new QThread(this);
 	renamer = new DLLRenamer();
@@ -86,6 +87,7 @@ LXDInjector::LXDInjector(QWidget *parent)
 	traymenu->addAction(ui.actionGameAccountService);
 	traymenu->addAction(ui.actionRefresh);
 	traymenu->addAction(ui.actionRefreshAccount);
+	traymenu->addAction(ui.actionDirectoryCorrection);
 	traymenu->addAction(ui.actiongetRockstarStatus);
 	traymenu->addSeparator();
 	traymenu->addAction(ui.actionAbout);
@@ -124,12 +126,12 @@ LXDInjector::LXDInjector(QWidget *parent)
 	adv.setWindowFlag(Qt::CustomizeWindowHint, true);
 	adv.setWindowFlag(Qt::FramelessWindowHint, true);
 	adv.show();
+	QSound::play(":/LXDInjector/sound_welcome.wav");
 }
 
 LXDInjector::~LXDInjector()
 {
 	VM_START
-	QProcess* process = new QProcess;
 	STR_ENCRYPT_START
 	killTask("GTA5.exe");
 	STR_ENCRYPT_END
@@ -162,12 +164,27 @@ LXDInjector::~LXDInjector()
 	VM_END
 }
 
+void LXDInjector::netquit()
+{
+	VM_START
+	STR_ENCRYPT_START
+		wsreturned = false;
+		aboutToQuit = true;
+		QTimer *timer = new QTimer();
+		connect(timer, SIGNAL(timeout()), this, SLOT(wstimeout()));
+		timer->setSingleShot(true);
+		timer->start(1000);
+		qint64 b = chksocket->sendTextMessage("bye");
+		Sleep(100);
+	STR_ENCRYPT_END
+	VM_END
+}
+
 void LXDInjector::on_guard_died()
 {
 	VM_START
 	STR_ENCRYPT_START
-	QProcess* process = new QProcess;
-	process->execute("taskkill /F /IM GTA5.exe");
+	killTask("GTA5.exe");
 	disconnect(&((LXDQApp *)qApp)->GuardSocket, SIGNAL(disconnected()), this, SLOT(on_guard_died()));
 	qApp->quit();
 	STR_ENCRYPT_END
@@ -208,16 +225,38 @@ void LXDInjector::closeEvent(QCloseEvent *e)
 	trayicon->showMessage(QString::fromWCharArray(L"洛仙都客户端"), QString::fromWCharArray(L"主界面已隐藏，您可以点击托盘图标来重新显示。"));
 }
 
+bool LXDInjector::nativeEvent(const QByteArray &type, void *msg, long *result)
+{
+	VM_START
+	switch (((MSG*)msg)->message)
+	{
+		case WM_QUERYENDSESSION:
+		{
+			ShutdownBlockReasonCreate((HWND)winId(), L"洛仙都正在退出，请不要关闭，否则会被误封");
+			*result = false;
+			STR_ENCRYPT_START
+			killTask("GTA5.exe");
+			STR_ENCRYPT_END
+			netquit();
+			return true;
+			break;
+		}
+	}
+	return false;
+	VM_END
+}
+
 void LXDInjector::wsconnected()
 {
-	this->refreshTimer->start(10000);
+	this->refreshTimer->start(30000);
 	this->networkerrorcount = 0;
 }
 
 void LXDInjector::wsdisconnected()
 {
 	this->refreshTimer->stop();
-	if(++this->networkerrorcount == 1)
+	this->chksocket->open(QUrl("ws://" + ((LXDQApp *)qApp)->host + "/chklogin/" + this->sessionkey.split("::")[0]));
+	if(++this->networkerrorcount == 5)
 		QApplication::quit();
 }
 
@@ -228,12 +267,16 @@ void LXDInjector::chklogin()
 	QTimer *timer = new QTimer();
 	connect(timer, SIGNAL(timeout()),this, SLOT(wstimeout()));
 	timer->setSingleShot(true);
-	timer->start(2000);
+	timer->start(3000);
 }
 
 void LXDInjector::wstimeout()
 {
-	if (!wsreturned)
+	if (!wsreturned && isBeggar)
+	{
+		++networkerrorcount;
+	}
+	if (!wsreturned && aboutToQuit)
 	{
 		QApplication::quit();
 	}
@@ -241,6 +284,8 @@ void LXDInjector::wstimeout()
 
 void LXDInjector::wsrecieved(QString rep)
 {
+	VM_START
+	STR_ENCRYPT_START
 	wsreturned = true;
 	if (rep.contains("*failed*"))
 	{
@@ -248,10 +293,16 @@ void LXDInjector::wsrecieved(QString rep)
 		this->loginoutdated = true;
 		QApplication::quit();
 	}
+	else if (rep == "bye")
+	{
+		QApplication::quit();
+	}
 	else
 	{
 		this->sessionkey = rep;
 	}
+	STR_ENCRYPT_END
+	VM_END
 }
 
 void LXDInjector::contextMenuEvent(QContextMenuEvent *e)
@@ -271,7 +322,7 @@ void LXDInjector::on_actionAbout_triggered()
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
 	STR_ENCRYPTW_START
 	QString msg = QString::fromWCharArray(L"<p>洛仙都客户端</p>");
-	msg += QString::fromWCharArray(L"<p>洛仙都猫哥制作</p>");
+	msg += QString::fromWCharArray(L"<p>洛仙都技术组敬上</p>");
 	msg += QString::fromWCharArray(L"<p>基于&nbsp;<a style=\"color: #BBBBBB\" href=\"https://www.qt.io/\">Qt</a>&nbsp;构建<br>使用&nbsp;<a style=\"color: #BBBBBB\" href=\"https://github.com/DarthTon/Xenos\">Xenos</a>&nbsp;内存注入技术</p>");
 	msg += QString::fromWCharArray(L"<p>洛仙都欢迎您<br>一群：105976356<br>二群：1026775748</p>");
 	QMessageBox message(QMessageBox::Information, QString::fromWCharArray(L"关于"), msg);
@@ -294,7 +345,8 @@ void LXDInjector::on_actionHelp_triggered()
 
 void LXDInjector::on_actionExit_triggered()
 {
-	QApplication::quit();
+	netquit();
+	// QApplication::quit();
 }
 
 void LXDInjector::on_actionRefresh_triggered()
@@ -349,6 +401,12 @@ void LXDInjector::on_actiongetRockstarStatus_triggered()
 	emit doRockstarStatusget();
 }
 
+void LXDInjector::on_actionDirectoryCorrection_triggered()
+{
+	frmDirectoryCorrection f;
+	f.exec();
+}
+
 void LXDInjector::on_RockstarStatus_got(QString result)
 {
 	disconnect(RockstarStatusworker, SIGNAL(finishget(QString)), this, SLOT(on_RockstarStatus_got(QString)));
@@ -375,6 +433,7 @@ void LXDInjector::on_btnInject_clicked()
 		QJsonObject o = ui.lstCheats->currentData().toJsonObject();
 		QString id = QString("%1").arg(o.value(tr("id")).toInt());
 		emit dodllget(id, this->sessionkey);
+		QSound::play(":/LXDInjector/sound_injecting.wav");
 	}
 	else
 	{
@@ -402,6 +461,7 @@ void LXDInjector::on_dll_finished(bool injectcompleted)
 	ui.btnInject->setDisabled(false);
 	if (injectcompleted)
 	{
+		QSound::play(":/LXDInjector/sound_success.wav");
 		this->hide();
 		trayicon->showMessage(QString::fromWCharArray(L"洛仙都客户端"), QString::fromWCharArray(L"外挂注入成功，请继续游戏吧！\n点击托盘图标显示洛仙都客户端。"));
 	}

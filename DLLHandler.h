@@ -40,6 +40,7 @@ private slots:
 
 signals:
 	void statusreport(wchar_t *status);
+	void showerr(QString err);
 	void statusreport(QString msg, int ms);
 	void DLLfilereport(QString DLLpath);
 	void finished(bool);
