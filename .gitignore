@@ -266,3 +266,6 @@ __pycache__/
 /references
 /GeneratedFiles
 /LXDLite/GeneratedFiles
+*.xpr
+*.dll
+*.exe
