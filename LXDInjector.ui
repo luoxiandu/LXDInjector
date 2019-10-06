@@ -70,7 +70,7 @@
      </font>
     </property>
     <property name="text">
-     <string>请选择灵魂：</string>
+     <string>请选择辅助：</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btnInject">
@@ -83,7 +83,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>注入灵魂！</string>
+     <string>一键开挂！</string>
     </property>
     <property name="default">
      <bool>true</bool>

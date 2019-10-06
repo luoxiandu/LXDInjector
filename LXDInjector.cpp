@@ -126,7 +126,7 @@ LXDInjector::LXDInjector(QWidget *parent)
 	adv.setWindowFlag(Qt::CustomizeWindowHint, true);
 	adv.setWindowFlag(Qt::FramelessWindowHint, true);
 	adv.show();
-	QSound::play(":/LXDInjector/sound_welcome.wav");
+	// QSound::play(":/LXDInjector/sound_welcome.wav");
 }
 
 LXDInjector::~LXDInjector()
@@ -151,7 +151,7 @@ LXDInjector::~LXDInjector()
 	}
 	if (this->isBeggar)
 	{
-		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"提示"), QString::fromWCharArray(L"<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=c9f0a58ddf654dfee69356d744d426607f5f2ed076c09c1be78e5af2a4f893a8\">加入洛仙都QQ群（105976356）</a>可获得不限时开挂体验哦~"));
+		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"提示"), QString::fromWCharArray(L"<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=3bd4546a6b8d2ffba6a70f344b06644f4d4f7e592d425aa84720eb6b8291\">加入洛仙都QQ群（667556362）</a>可获得不限时开挂体验哦~"));
 		message.setWindowIcon(ico);
 		message.exec();
 	}
@@ -324,7 +324,7 @@ void LXDInjector::on_actionAbout_triggered()
 	QString msg = QString::fromWCharArray(L"<p>洛仙都客户端</p>");
 	msg += QString::fromWCharArray(L"<p>洛仙都技术组敬上</p>");
 	msg += QString::fromWCharArray(L"<p>基于&nbsp;<a style=\"color: #BBBBBB\" href=\"https://www.qt.io/\">Qt</a>&nbsp;构建<br>使用&nbsp;<a style=\"color: #BBBBBB\" href=\"https://github.com/DarthTon/Xenos\">Xenos</a>&nbsp;内存注入技术</p>");
-	msg += QString::fromWCharArray(L"<p>洛仙都欢迎您<br>一群：105976356<br>二群：1026775748</p>");
+	msg += QString::fromWCharArray(L"<p>洛仙都欢迎您<br>一群：667556362<br>二群：1026775748</p>");
 	QMessageBox message(QMessageBox::Information, QString::fromWCharArray(L"关于"), msg);
 	STR_ENCRYPTW_END
 	message.setWindowIcon(ico);
@@ -433,7 +433,7 @@ void LXDInjector::on_btnInject_clicked()
 		QJsonObject o = ui.lstCheats->currentData().toJsonObject();
 		QString id = QString("%1").arg(o.value(tr("id")).toInt());
 		emit dodllget(id, this->sessionkey);
-		QSound::play(":/LXDInjector/sound_injecting.wav");
+		// QSound::play(":/LXDInjector/sound_injecting.wav");
 	}
 	else
 	{
@@ -461,7 +461,7 @@ void LXDInjector::on_dll_finished(bool injectcompleted)
 	ui.btnInject->setDisabled(false);
 	if (injectcompleted)
 	{
-		QSound::play(":/LXDInjector/sound_success.wav");
+		// QSound::play(":/LXDInjector/sound_success.wav");
 		this->hide();
 		trayicon->showMessage(QString::fromWCharArray(L"洛仙都客户端"), QString::fromWCharArray(L"外挂注入成功，请继续游戏吧！\n点击托盘图标显示洛仙都客户端。"));
 	}

@@ -147,7 +147,7 @@ void frmLogin::on_login_recieved(QNetworkReply *rep)
 	{
 		STR_ENCRYPTW_START
 		QString msg = QString::fromWCharArray(L"<p>在您上次使用客户端的过程中检测到恶性破解，已禁止您使用洛仙都软件。</p>");
-		msg += QString::fromWCharArray(L"<p>如果您喜欢我们提供的外挂请考虑&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=c9f0a58ddf654dfee69356d744d426607f5f2ed076c09c1be78e5af2a4f893a8\">加入洛仙都QQ群（105976356）</a>&nbsp;永久使用。</p>");
+		msg += QString::fromWCharArray(L"<p>如果您喜欢我们提供的外挂请考虑&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=3bd4546a6b8d2ffba6a70f344b06644f4d4f7e592d425aa84720eb6b8291\">加入洛仙都QQ群（667556362）</a>&nbsp;永久使用。</p>");
 		QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"警告"), msg);
 		STR_ENCRYPTW_END
 		message.setWindowIcon(ico);
@@ -160,7 +160,7 @@ void frmLogin::on_login_recieved(QNetworkReply *rep)
 			STR_ENCRYPTW_START
 			QString msg = QString::fromWCharArray(L"<p>服务器拒绝了您的试用请求，可能是您今天已经试用过了，欢迎您明天再来！</p>");
 			msg += QString::fromWCharArray(L"<p>也可能是您的版本过期了，请&nbsp;<a style=\"color: #BBBBBB\" href=\"https://luoxiandu.com\">访问我们的官网</a>&nbsp;获取最新版本！</p>");
-			msg += QString::fromWCharArray(L"<p>如果您有其它问题，欢迎&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=c9f0a58ddf654dfee69356d744d426607f5f2ed076c09c1be78e5af2a4f893a8\">加入洛仙都QQ群（105976356）</a>&nbsp;来和我们讨论。</p>");
+			msg += QString::fromWCharArray(L"<p>如果您有其它问题，欢迎&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=3bd4546a6b8d2ffba6a70f344b06644f4d4f7e592d425aa84720eb6b8291\">加入洛仙都QQ群（667556362）</a>&nbsp;来和我们讨论。</p>");
 			QMessageBox message(QMessageBox::NoIcon, QString::fromWCharArray(L"错误"), msg);
 			STR_ENCRYPTW_END
 			message.setWindowIcon(ico);
@@ -193,7 +193,7 @@ void frmLogin::joinus()
 	VM_START
 	QIcon ico(":/LXDInjector/LXDInjector.ico");
 	STR_ENCRYPTW_START
-	QString msg = QString::fromWCharArray(L"<p>注册用户登录会获得更多功能哦！</p><p>如需注册，请&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=c9f0a58ddf654dfee69356d744d426607f5f2ed076c09c1be78e5af2a4f893a8\">加入洛仙都QQ群（105976356）</a>&nbsp;，并向机器人发送“设置密码”来设置您的密码。</p>");
+	QString msg = QString::fromWCharArray(L"<p>注册用户登录会获得更多功能哦！</p><p>如需注册，请&nbsp;<a style=\"color: #BBBBBB\" href=\"https://shang.qq.com/wpa/qunwpa?idkey=3bd4546a6b8d2ffba6a70f344b06644f4d4f7e592d425aa84720eb6b8291\">加入洛仙都QQ群（667556362）</a>&nbsp;，并向机器人发送“设置密码”来设置您的密码。</p>");
 	QMessageBox message(QMessageBox::Information, QString::fromWCharArray(L"信息"), msg);
 	STR_ENCRYPTW_END
 	message.setWindowIcon(ico);
